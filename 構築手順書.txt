@@ -1,18 +1,35 @@
+# 前提条件
+Azure Ubuntu22LTS
+
 # 初期
 $ cd ~
+$ sudo apt update
 
-# python install
-$ sudo apt install -y python3-pip
-$ python3 -m pip install llama-cpp-python==0.2.77 --prefer-binary  --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu122
-$ pip3 install torch==2.3.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cpu
+# llama-cpp の Ubuntu 用 ビルド
+$ sudo apt-get install ocl-icd-opencl-dev
+$ sudo snap install cmake --classic
+$ git clone https://github.com/CNugteren/CLBlast.git
+$ cd CLBlast
+$ mkdir build
+$ cd build
+$ cmake .. -DCMAKE_BUILD_TYPE=Release
+$ make
+$ sudo make install
 
 # 環境変数を設定
-$ set LLAMA_CUBLAS=1
-$ set CMAKE_ARGS=-DLLAMA_CUBLAS=on
+$ set CMAKE_ARGS="-DLLAMA_CLBLAST=on"
 $ set FORCE_CMAKE=1
+
+# dependency install
+$ sudo apt install -y python3-pip
+$ python3 -m pip install llama-cpp-python==0.2.90 --upgrade --force-reinstall --no-cache-dir
+$ python3 -m pip install torch==2.3.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cpu
 
 # model install
 $ git clone https://github.com/pekoka/llm-lama-cpu.git
 $ cd llm-lama-cpu
 $ wget -P ./model_assets/LocalLLM https://huggingface.co/TheBloke/Swallow-13B-Instruct-GGUF/resolve/main/swallow-13b-instruct.Q4_K_M.gguf?download=true
+$ mv ./model_assets/LocalLLM/swallow-13b-instruct.Q4_K_M.gguf?download=true ./model_assets/LocalLLM/swallow-13b-instruct.Q4_K_M.gguf
 
+# app start
+$ python localLLM.py
