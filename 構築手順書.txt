@@ -1,0 +1,14 @@
+# 初期
+$ cd ~
+
+# python install
+$ sudo apt install -y python3-pip
+$ python3 -m pip install llama-cpp-python==0.2.77 --prefer-binary  --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu122
+$ pip3 install torch==2.3.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cpu
+
+# model install
+$ wget -P . https://huggingface.co/TheBloke/Swallow-13B-Instruct-GGUF/resolve/main/swallow-13b-instruct.Q4_K_M.gguf?download=true
+
+$ set LLAMA_CUBLAS=1
+$ set CMAKE_ARGS=-DLLAMA_CUBLAS=on
+$ set FORCE_CMAKE=1
